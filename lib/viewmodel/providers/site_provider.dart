@@ -6,10 +6,7 @@ class SiteState {
   final List<SiteModel> sites;
   final bool isLoading;
 
-  const SiteState({
-    this.sites = const [],
-    this.isLoading = true,
-  });
+  const SiteState({this.sites = const [], this.isLoading = true});
 
   SiteState copyWith({List<SiteModel>? sites, bool? isLoading}) {
     return SiteState(
@@ -17,6 +14,13 @@ class SiteState {
       isLoading: isLoading ?? this.isLoading,
     );
   }
+
+  //Count getters for site statuses
+  int get activeCount =>
+      sites.where((s) => s.status == SiteStatus.active).length;
+
+  int get maintenanceCount =>
+      sites.where((s) => s.status == SiteStatus.maintenance).length;
 }
 
 class SiteNotifier extends StateNotifier<SiteState> {

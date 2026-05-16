@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:site_dashboard/view/widgets/appbar_widget.dart';
 import 'package:site_dashboard/view/widgets/loading_widget.dart';
+import 'package:site_dashboard/view/widgets/status_summary_cards.dart';
 import '../../viewmodel/providers/site_provider.dart';
 import '../../viewmodel/providers/search_provider.dart';
 import '../theme/app_theme.dart';
@@ -18,6 +20,7 @@ class DashboardScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppTheme.background,
+      appBar: const KibbcomAppBar(),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,7 +38,7 @@ class DashboardScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            
+            const StatusSummaryCards(),
             const SiteSearchBar(),
             if (!siteState.isLoading)
               Padding(
