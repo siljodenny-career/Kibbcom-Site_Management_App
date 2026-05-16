@@ -18,6 +18,8 @@ void main() {
   runApp(
     DevicePreview(
       enabled: _shouldEnableDevicePreview(logicalWidth),
+      backgroundColor: Colors.black,
+      
       builder: (context) => const ProviderScope(child: SiteDashboardApp()),
     ),
   );

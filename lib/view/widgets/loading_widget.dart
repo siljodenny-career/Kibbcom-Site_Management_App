@@ -152,7 +152,7 @@ class _ShimmerBox extends StatelessWidget {
         .shimmer(
           delay: delay,
           duration: 1200.ms,
-          color: AppTheme.textSecondary.withOpacity(0.15),
+          color: AppTheme.textSecondary.withValues(alpha: 0.15),
         );
   }
 }

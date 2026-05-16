@@ -20,7 +20,7 @@ class DashboardScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppTheme.background,
-      appBar: const KibbcomAppBar(),
+      appBar: const KibbcomAppBar(showDashboardMenu: false,),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

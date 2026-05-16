@@ -5,10 +5,12 @@ import '../screens/dashboard_screen.dart';
 
 class KibbcomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onNavigateToDashboard;
+  final bool showDashboardMenu;
 
   const KibbcomAppBar({
     super.key,
     this.onNavigateToDashboard,
+    this.showDashboardMenu = true,
   });
 
   // ── Required by PreferredSizeWidget ───────────────────────
@@ -25,13 +27,13 @@ class KibbcomAppBar extends StatelessWidget implements PreferredSizeWidget {
         pageBuilder: (_, __, ___) => const _NotificationSidebar(),
         transitionsBuilder: (_, animation, __, child) {
           return SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(1.0, 0),
-              end: Offset.zero,
-            ).animate(CurvedAnimation(
-              parent: animation,
-              curve: Curves.easeOut,
-            )),
+            position:
+                Tween<Offset>(
+                  begin: const Offset(1.0, 0),
+                  end: Offset.zero,
+                ).animate(
+                  CurvedAnimation(parent: animation, curve: Curves.easeOut),
+                ),
             child: child,
           );
         },
@@ -54,13 +56,13 @@ class KibbcomAppBar extends StatelessWidget implements PreferredSizeWidget {
           return FadeTransition(
             opacity: animation,
             child: SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0.04, 0),
-                end: Offset.zero,
-              ).animate(CurvedAnimation(
-                parent: animation,
-                curve: Curves.easeOut,
-              )),
+              position:
+                  Tween<Offset>(
+                    begin: const Offset(0.04, 0),
+                    end: Offset.zero,
+                  ).animate(
+                    CurvedAnimation(parent: animation, curve: Curves.easeOut),
+                  ),
               child: child,
             ),
           );
@@ -80,7 +82,6 @@ class KibbcomAppBar extends StatelessWidget implements PreferredSizeWidget {
       // ── Logo mark + Kibbcom title ──────────────────────
       title: Row(
         children: [
-          
           RichText(
             text: const TextSpan(
               children: [
@@ -120,6 +121,7 @@ class KibbcomAppBar extends StatelessWidget implements PreferredSizeWidget {
         // ── Three dot menu ───────────────────────────────
         _ThreeDotMenu(
           onNavigateToDashboard: () => _navigateToDashboard(context),
+          showDashboardMenu: showDashboardMenu,
         ),
 
         const SizedBox(width: 8),
@@ -156,8 +158,12 @@ class _AppBarIconButton extends StatelessWidget {
 // ── Three dot dropdown menu ───────────────────────────────────
 class _ThreeDotMenu extends StatelessWidget {
   final VoidCallback onNavigateToDashboard;
+  final bool showDashboardMenu;
 
-  const _ThreeDotMenu({required this.onNavigateToDashboard});
+  const _ThreeDotMenu({
+    required this.onNavigateToDashboard,
+    this.showDashboardMenu = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -195,13 +201,18 @@ class _ThreeDotMenu extends StatelessWidget {
         }
       },
       itemBuilder: (_) => [
-        _menuItem(
-          value: 'dashboard',
-          icon: Icons.dashboard_rounded,
-          label: 'Dashboard',
-          color: AppTheme.primary,
-        ),
-        const PopupMenuDivider(height: 1),
+        // Dashboard item — only on HomeScreen
+        if (showDashboardMenu) ...[
+          _menuItem(
+            value: 'dashboard',
+            icon: Icons.dashboard_rounded,
+            label: 'Dashboard',
+            color: AppTheme.primary,
+          ),
+          const PopupMenuDivider(height: 1),
+        ],
+
+        // About — always visible on every screen
         _menuItem(
           value: 'about',
           icon: Icons.info_outline_rounded,
@@ -294,7 +305,6 @@ class _ThreeDotMenu extends StatelessWidget {
   }
 }
 
-// ── Notification sidebar ──────────────────────────────────────
 class _NotificationSidebar extends StatelessWidget {
   const _NotificationSidebar();
 
@@ -302,127 +312,250 @@ class _NotificationSidebar extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return Align(
-      alignment: Alignment.centerRight,
-      child: GestureDetector(
-        onTap: () {},
-        child: Container(
-          width: screenWidth * 0.78,
-          height: double.infinity,
-          decoration: const BoxDecoration(
-            color: AppTheme.surface,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(24),
-              bottomLeft: Radius.circular(24),
+    return Material(
+      // ← ADD THIS
+      color: Colors.transparent,
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: GestureDetector(
+          onTap: () {},
+          child: Container(
+            width: screenWidth * 0.78,
+            height: double.infinity,
+            decoration: const BoxDecoration(
+              color: AppTheme.surface,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(28),
+                bottomLeft: Radius.circular(28),
+              ),
+              border: Border(
+                left: BorderSide(color: AppTheme.border, width: 1),
+              ),
             ),
-            border: Border(
-              left: BorderSide(color: AppTheme.border, width: 1),
-            ),
-          ),
-          child: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // ── Sidebar header ─────────────────────
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 12, 0),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.notifications_none_rounded,
-                        color: AppTheme.primary,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 10),
-                      const Expanded(
-                        child: Text(
-                          'Notifications',
-                          style: TextStyle(
-                            color: AppTheme.textPrimary,
-                            fontSize: 17,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () => Navigator.pop(context),
-                        child: Container(
-                          width: 32,
-                          height: 32,
-                          decoration: BoxDecoration(
-                            color: AppTheme.surfaceCard,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                                color: AppTheme.border, width: 1),
-                          ),
-                          child: const Icon(
-                            Icons.close_rounded,
-                            color: AppTheme.textSecondary,
-                            size: 16,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+            child: SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _SidebarHeader(),
 
-                const SizedBox(height: 12),
-                const Divider(color: AppTheme.border, height: 1),
-
-                // ── Empty state ────────────────────────
-                Expanded(
-                  child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 64,
-                          height: 64,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppTheme.surfaceCard,
-                            border: Border.all(
-                                color: AppTheme.border, width: 1),
-                          ),
-                          child: const Icon(
-                            Icons.notifications_off_outlined,
-                            color: AppTheme.textSecondary,
-                            size: 28,
-                          ),
-                        )
-                            .animate()
-                            .fadeIn(duration: 400.ms)
-                            .scaleXY(
-                              begin: 0.8,
-                              end: 1.0,
-                              duration: 400.ms,
-                              curve: Curves.easeOut,
-                            ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          'No notifications',
-                          style: TextStyle(
-                            color: AppTheme.textSecondary,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ).animate().fadeIn(delay: 150.ms, duration: 400.ms),
-                        const SizedBox(height: 6),
-                        const Text(
-                          'You\'re all caught up!',
-                          style: TextStyle(
-                            color: AppTheme.textSecondary,
-                            fontSize: 12,
-                          ),
-                        ).animate().fadeIn(delay: 250.ms, duration: 400.ms),
-                      ],
-                    ),
+                  const SizedBox(height: 8),
+                  const Divider(
+                    color: AppTheme.border,
+                    height: 1,
+                    indent: 20,
+                    endIndent: 20,
                   ),
-                ),
-              ],
+                  const Expanded(child: _EmptyState()),
+                ],
+              ),
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+// ── Sidebar header ────────────────────────────────────────────
+class _SidebarHeader extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 24, 16, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              // Icon badge
+              Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppTheme.primary.withValues(alpha: 0.12),
+                      border: Border.all(
+                        color: AppTheme.primary.withValues(alpha: 0.35),
+                        width: 1,
+                      ),
+                    ),
+                    child: const Icon(
+                      Icons.notifications_none_rounded,
+                      color: AppTheme.primary,
+                      size: 20,
+                    ),
+                  )
+                  .animate()
+                  .fadeIn(duration: 300.ms)
+                  .scaleXY(
+                    begin: 0.7,
+                    end: 1.0,
+                    duration: 400.ms,
+                    curve: Curves.easeOutBack,
+                  ),
+
+              const SizedBox(width: 12),
+
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                          'Notifications',
+                          style: TextStyle(
+                            color: AppTheme.textPrimary,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -0.3,
+                          ),
+                        )
+                        .animate()
+                        .fadeIn(delay: 100.ms, duration: 300.ms)
+                        .slideX(begin: 0.1, end: 0),
+
+                    const Text(
+                      'Stay up to date',
+                      style: TextStyle(
+                        color: AppTheme.textSecondary,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ).animate().fadeIn(delay: 150.ms, duration: 300.ms),
+                  ],
+                ),
+              ),
+
+              // Close button
+              GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  width: 34,
+                  height: 34,
+                  decoration: BoxDecoration(
+                    color: AppTheme.surfaceCard,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: AppTheme.border, width: 1),
+                  ),
+                  child: const Icon(
+                    Icons.close_rounded,
+                    color: AppTheme.textSecondary,
+                    size: 16,
+                  ),
+                ),
+              ).animate().fadeIn(delay: 200.ms, duration: 300.ms),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Empty state ───────────────────────────────────────────────
+class _EmptyState extends StatelessWidget {
+  const _EmptyState();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Layered circle illustration
+          Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Outer glow ring
+                  Container(
+                        width: 110,
+                        height: 110,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppTheme.primary.withValues(alpha: 0.04),
+                          border: Border.all(
+                            color: AppTheme.primary.withValues(alpha: 0.08),
+                            width: 1,
+                          ),
+                        ),
+                      )
+                      .animate(onPlay: (c) => c.repeat(reverse: true))
+                      .scaleXY(
+                        begin: 0.95,
+                        end: 1.05,
+                        duration: 2000.ms,
+                        curve: Curves.easeInOut,
+                      ),
+
+                  // Middle ring
+                  Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppTheme.primary.withValues(alpha: 0.07),
+                      border: Border.all(
+                        color: AppTheme.primary.withValues(alpha: 0.15),
+                        width: 1,
+                      ),
+                    ),
+                  ),
+
+                  // Inner icon circle
+                  Container(
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppTheme.surfaceCard,
+                      border: Border.all(color: AppTheme.border, width: 1),
+                    ),
+                    child: const Icon(
+                      Icons.notifications_off_outlined,
+                      color: AppTheme.textSecondary,
+                      size: 24,
+                    ),
+                  ),
+                ],
+              )
+              .animate()
+              .fadeIn(delay: 200.ms, duration: 400.ms)
+              .scaleXY(
+                begin: 0.8,
+                end: 1.0,
+                delay: 200.ms,
+                duration: 500.ms,
+                curve: Curves.easeOutBack,
+              ),
+
+          const SizedBox(height: 24),
+
+          // Title
+          const Text(
+                'No notifications',
+                style: TextStyle(
+                  color: AppTheme.textPrimary,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: -0.2,
+                ),
+              )
+              .animate()
+              .fadeIn(delay: 300.ms, duration: 400.ms)
+              .slideY(begin: 0.2, end: 0, delay: 300.ms, duration: 400.ms),
+
+          const SizedBox(height: 6),
+
+          // Subtitle
+          const Text(
+            "You're all caught up!\nNo new updates at the moment.",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: AppTheme.textSecondary,
+              fontSize: 12,
+              height: 1.6,
+            ),
+          ).animate().fadeIn(delay: 380.ms, duration: 400.ms),
+        ],
       ),
     );
   }
