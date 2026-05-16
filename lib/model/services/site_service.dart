@@ -1,7 +1,7 @@
 import '../models/site_model.dart';
 
 class SiteService {
-  Future<List<SiteModel>> fetchSites() async {
+  Future<List<SiteModel>> mockApiResponse() async {
     await Future.delayed(const Duration(seconds: 2)); // Simulate network delay
     return [
       SiteModel(

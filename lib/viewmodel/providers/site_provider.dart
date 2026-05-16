@@ -32,7 +32,7 @@ class SiteNotifier extends StateNotifier<SiteState> {
 
   Future<void> _loadSites() async {
     state = state.copyWith(isLoading: true);
-    final sites = await _service.fetchSites();
+    final sites = await _service.mockApiResponse();
     state = state.copyWith(sites: sites, isLoading: false);
   }
 
