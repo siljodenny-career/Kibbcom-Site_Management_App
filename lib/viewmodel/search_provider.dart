@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../model/models/site_model.dart';
+import '../model/models/site_model.dart';
 import 'site_provider.dart';
 
 final searchQueryProvider = StateProvider<String>((_) => '');

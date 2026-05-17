@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../model/models/site_model.dart';
-import '../../model/services/site_service.dart';
+import '../model/models/site_model.dart';
+import '../model/services/site_service.dart';
 
 class SiteState {
   final List<SiteModel> sites;

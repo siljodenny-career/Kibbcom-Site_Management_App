@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../viewmodel/providers/search_provider.dart';
+import '../../viewmodel/search_provider.dart';
 import '../theme/app_theme.dart';
 
 class SiteSearchBar extends ConsumerWidget {
