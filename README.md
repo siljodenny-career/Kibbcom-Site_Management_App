@@ -46,6 +46,16 @@ operational sites in real time.
 </tr>
 </table>
 
+---
+## App Demo
+<video src="assets/videos/demo.mp4" controls width="700"></video>
+
+https://github.com/user-attachments/assets/5fd3c43c-8697-4d6a-8f94-b5b91380549c
+
+
+
+
+
 
 
 
